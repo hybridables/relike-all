@@ -1,7 +1,7 @@
 {
   "name": "relike-all",
   "version": "0.0.0",
-  "description": "Create promise from sync, async, string, number, array and so on. Handle completion (results) and errors gracefully! Built on top of relike, used by redolent to build robust (hybrid) APIs.",
+  "description": "Create promise from sync, async, string, number, array and so on. Handle completion (results) and errors gracefully! Built on top of `relike`, used by `redolent` to build robust (hybrid) APIs.",
   "repository": "hybridables/relike-all",
   "author": "Charlike Mike Reagent <@tunnckoCore> (http://www.tunnckocore.tk)",
   "main": "index.js",

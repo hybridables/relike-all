@@ -30,6 +30,16 @@ function multipleArgs (one, two, three, cb) {
   cb(null, one, two, three)
 }
 
+test('should not throw TypeError if falsey value given', function (done) {
+  relikeAll(false).then(function (bool) {
+    test.strictEqual(bool, false)
+    return relikeAll(null).then(function (empty) {
+      test.strictEqual(empty, null)
+      done()
+    })
+  }, done)
+})
+
 test('should promisify a given string (only one argument)', function (done) {
   var promise = relikeAll('foo bar baz')
   promise.then(function (str) {
