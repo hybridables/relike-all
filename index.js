@@ -7,18 +7,19 @@
 
 'use strict'
 
-var utils = require('./utils')
+var relike = require('relike')
+var sliced = require('sliced')
 
 module.exports = function relikeAll (val) {
-  utils.relike.promise = relikeAll.promise
-  var args = utils.sliced(arguments)
+  relike.promise = relikeAll.promise
+  var args = sliced(arguments)
   if (typeof val !== 'function') {
-    return utils.relike.call(this, function () {
-      if (utils.isarray(args) && args.length === 1) {
+    return relike.call(this, function () {
+      if (require('isarray')(args) && args.length === 1) {
         return args[0]
       }
       return args
     })
   }
-  return utils.relike.apply(this, args)
+  return relike.apply(this, args)
 }
