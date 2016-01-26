@@ -1,5 +1,10 @@
 
 
+## 2.1.1 - 2016-01-26
+- Release v2.1.1 / npm@v2.1.1
+- support promisify module that is function and have methods on it
+  + for example `simple-get` module - `simpleGet()` and `simpleGet.post()`
+
 ## 2.1.0 - 2016-01-26
 - Release v2.1.0 / npm@v2.1.0
 - add notice to the readme
