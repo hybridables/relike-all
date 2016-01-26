@@ -16,6 +16,16 @@ var isPromise = require('is-promise')
 var isStream = require('is-node-stream')
 var isBuffer = require('is-buffer')
 
+test('should throw TypeError if first argument not an object or function', function (done) {
+  function fixture () {
+    relikeAll(1234)
+  }
+
+  test.throws(fixture, TypeError)
+  test.throws(fixture, /expect `source` be object/)
+  done()
+})
+
 test('should promisify all `fs` module functions, including `fs.createReadStream`', function (done) {
   var pfs = relikeAll(fs)
 
@@ -62,4 +72,15 @@ test('should promisify only functions that match to given pattern', function (do
   var promise = file.readFileSync('package.json')
   test.strictEqual(isPromise(promise), true)
   done()
+})
+
+test('should accept options as second argument if not third', function (done) {
+  var pfs = relikeAll(fs, {dot: true})
+  var stats = pfs.statSync('package.json')
+
+  test.strictEqual(isPromise(stats), true)
+  stats.then(function (res) {
+    test.strictEqual(typeof res, 'object')
+    done()
+  }, done)
 })
