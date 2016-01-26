@@ -1,6 +1,6 @@
 # [relike-all][author-www-url] [![npmjs.com][npmjs-img]][npmjs-url] [![The MIT License][license-img]][license-url] 
 
-> Promisify all functions in an object, using relike.
+> Promisify all functions in an object, using `relike`.
 
 [![code climate][codeclimate-img]][codeclimate-url] [![standard code style][standard-img]][standard-url] [![travis build status][travis-img]][travis-url] [![coverage status][coveralls-img]][coveralls-url] [![dependency status][david-img]][david-url]
 
@@ -128,7 +128,7 @@ But before doing anything, please read the [CONTRIBUTING.md](./CONTRIBUTING.md) 
 [npmjs-url]: https://www.npmjs.com/package/relike-all
 [npmjs-img]: https://img.shields.io/npm/v/relike-all.svg?label=relike-all
 
-[license-url]: https://github.com/hybridables/relike-all/blob/master/LICENSE.md
+[license-url]: https://github.com/hybridables/relike-all/blob/master/LICENSE
 [license-img]: https://img.shields.io/badge/license-MIT-blue.svg
 
 
