@@ -41,34 +41,20 @@ module.exports = function relikeAll (source, pattern, options) {
   if (utils.kindOf(source) !== 'function' && utils.kindOf(source) !== 'object') {
     throw new TypeError('relike-all: expect `source` be object|function')
   }
-  var self = this
-  utils.relike.promise = relikeAll.promise || options && options.promise
+  var Prome = relikeAll.promise || options && options.promise
 
   if (typeof source === 'function') {
-    return function promisified () {
-      var args = utils.sliced(arguments)
-      utils.relike.promise = promisified.promise || utils.relike.promise
-
-      return utils.relike.apply(self || this, [source].concat(args))
-    }
+    source = utils.relike.promisify.call(this, source, Prome)
   }
   if (arguments.length === 2 && utils.kindOf(pattern) === 'object') {
     options = pattern
     pattern = false
   }
+  var self = this
   var isMatch = !pattern ? function () { return true } : utils.isMatch(pattern, options)
 
-  return utils.reduce(source, function (dest, fn, name) {
-    if (isMatch(name)) {
-      dest[name] = function promisifiedFn () {
-        var args = utils.sliced(arguments)
-        utils.relike.promise = promisifiedFn.promise || utils.relike.promise
-
-        return utils.relike.apply(self || this, [fn].concat(args))
-      }
-    } else {
-      dest[name] = fn
-    }
+  return Object.keys(source).length ? utils.reduce(source, function (dest, fn, name) {
+    dest[name] = isMatch(name) ? utils.relike.promisify.call(self, fn, Prome) : fn
     return dest
-  }, options && options.dest ? options.dest : {})
+  }, options && options.dest ? options.dest : {}) : source
 }
