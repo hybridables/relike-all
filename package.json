@@ -10,7 +10,6 @@
     "test": "standard && node test.js"
   },
   "dependencies": {
-    "is-match": "^0.4.0",
     "kind-of": "^3.0.2",
     "lazy-cache": "^1.0.3",
     "object.reduce": "^0.1.7",
@@ -20,6 +19,7 @@
   "devDependencies": {
     "assertit": "^0.1.0",
     "is-buffer": "^1.1.1",
+    "is-match": "^0.4.0",
     "is-node-stream": "^1.0.0",
     "is-promise": "^2.1.0"
   },

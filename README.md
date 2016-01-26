@@ -2,6 +2,8 @@
 
 > Promisify all functions in an object, using `relike`.
 
+:sparkles: **Note that you must install [is-match](http://npm.im/is-match) if you will use glob patterns!** :beers:
+
 [![code climate][codeclimate-img]][codeclimate-url] [![standard code style][standard-img]][standard-url] [![travis build status][travis-img]][travis-url] [![coverage status][coveralls-img]][coveralls-url] [![dependency status][david-img]][david-url]
 
 
