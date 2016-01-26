@@ -44,6 +44,29 @@ fs.readFile('package.json', 'utf8')
   })
 ```
 
+### [relikeAll.promisify](./index.js#L86)
+> Wraps a function and returns a function that when is invoked returns Promise.  
+> Same as `Bluebird.promisify` or any other "promisify" thing - accept function and return a function.
+
+_Just relike's `.promisify` method_
+
+- `<fn>` **{Function}** callback-style or synchronous function to promisify
+- `[Prome]` **{Function}** custom Promise constructor/module to use, e.g. `Q`
+- `return` **{Function}** promisified function
+
+**Example**
+
+```js
+const fs = require('fs')
+const relikeAll = require('relike-all')
+const readFile = relikeAll.promisify(fs.readFile)
+
+readFile('package.json', 'utf8')
+  .then(JSON.parse)
+  .then(data => {
+    console.log(data.name) // => 'relike-all'
+  })
+```
 
 ### relikeAll.promise
 > Static property on which you can pass custom Promise module to use, e.g. `Q` constructor.  

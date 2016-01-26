@@ -58,3 +58,31 @@ module.exports = function relikeAll (source, pattern, options) {
     return dest
   }, options && options.dest ? options.dest : {}) : source
 }
+
+/**
+ * Wraps a function and returns a function that when is
+ * invoked returns Promise. Same as `Bluebird.promisify`.
+ *
+ * **Example**
+ *
+ * ```js
+ * const fs = require('fs')
+ * const relikeAll = require('relike-all')
+ * const readFile = relikeAll.promisify(fs.readFile)
+ *
+ * readFile('package.json', 'utf8')
+ *   .then(JSON.parse)
+ *   .then(data => {
+ *     console.log(data.name) // => 'relike-all'
+ *   })
+ * ```
+ *
+ * @name   .promisify
+ * @param  {Function} `[fn]` function to promisify
+ * @param  {Function} `[Prome]` custom Promise constructor/module to use, e.g. `Q`
+ * @return {Function} promisified function
+ * @api public
+ */
+module.exports.promisify = function relikePromisify () {
+  return utils.relike.promisify.apply(this, arguments)
+}

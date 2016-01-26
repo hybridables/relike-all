@@ -59,6 +59,13 @@ test('should promisify single function that is given', function (done) {
   }, done)
 })
 
+test('should use `.promisify` method to promisify function', function (done) {
+  relikeAll.promisify(fs.stat)(__filename).then(function (stats) {
+    test.strictEqual(typeof stats, 'object')
+    done()
+  }, done)
+})
+
 test('should promisify only functions that match to given pattern', function (done) {
   // promisify only `fs.readFile` and `fs.readFileSync`
   var file = relikeAll(fs, 'readFile*')
