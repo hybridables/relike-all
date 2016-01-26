@@ -1,7 +1,7 @@
 {
   "name": "relike-all",
   "version": "1.0.0",
-  "description": "Create promise from sync, async, string, number, array and so on. Handle completion (results) and errors gracefully! Built on top of `relike`, used by `redolent` to build robust (hybrid) APIs.",
+  "description": "Promisify all functions in an object, using relike.",
   "repository": "hybridables/relike-all",
   "author": "Charlike Mike Reagent <@tunnckoCore> (http://www.tunnckocore.tk)",
   "main": "index.js",
@@ -10,53 +10,24 @@
     "test": "standard && node test.js"
   },
   "dependencies": {
-    "isarray": "^1.0.0",
+    "is-match": "^0.4.0",
+    "kind-of": "^3.0.2",
+    "lazy-cache": "^1.0.3",
+    "object.reduce": "^0.1.7",
     "relike": "^1.0.1",
     "sliced": "^1.0.1"
   },
   "devDependencies": {
     "assertit": "^0.1.0",
-    "is-buffer": "^1.1.0",
-    "isarray": "1.0.0",
-    "pinkie": "^2.0.1",
-    "semver": "^5.0.3"
+    "is-buffer": "^1.1.1",
+    "is-node-stream": "^1.0.0",
+    "is-promise": "^2.1.0"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "utils.js"
   ],
   "keywords": [
-    "all",
-    "anything",
-    "api",
-    "array",
-    "async",
-    "bluebird",
-    "callback",
-    "cb",
-    "complete",
-    "completion",
-    "convert",
-    "easy",
-    "everywhere",
-    "gracefully",
-    "hybrid",
-    "hybridify",
-    "native",
-    "native-promise",
-    "promise",
-    "promisify",
-    "redolent",
-    "relike",
-    "relike-all",
-    "robust",
-    "simple",
-    "string",
-    "sync",
-    "synchronous",
-    "to",
-    "to-promise",
-    "transform",
-    "type",
-    "typeof"
+    "relike-all"
   ]
 }

@@ -11,138 +11,55 @@
 
 var fs = require('fs')
 var test = require('assertit')
-var isArray = require('isarray')
-var isBuffer = require('is-buffer')
-var semver = require('semver')
 var relikeAll = require('./index')
+var isPromise = require('is-promise')
+var isStream = require('is-node-stream')
+var isBuffer = require('is-buffer')
 
-function noop () {}
+test('should promisify all `fs` module functions, including `fs.createReadStream`', function (done) {
+  var pfs = relikeAll(fs)
 
-function notSkipOne (one, two, cb) {
-  cb(null, one, two, noop)
-}
-
-function notSkipTwo (one, two, cb) {
-  cb(null, one, two, fs.readFileSync)
-}
-
-function multipleArgs (one, two, three, cb) {
-  cb(null, one, two, three)
-}
-
-test('should not throw TypeError if falsey value given', function (done) {
-  relikeAll(false).then(function (bool) {
-    test.strictEqual(bool, false)
-    return relikeAll(null).then(function (empty) {
-      test.strictEqual(empty, null)
-      done()
-    })
-  }, done)
-})
-
-test('should promisify a given string (only one argument)', function (done) {
-  var promise = relikeAll('foo bar baz')
-  promise.then(function (str) {
-    test.strictEqual(str, 'foo bar baz')
-    done()
-  }, done)
-})
-
-test('should flatten multiple arguments given if first not a function', function (done) {
-  var promise = relikeAll('foo', 123, [1, 2], {a: 'b'})
-  promise.then(function (arr) {
-    test.deepEqual(arr, ['foo', 123, [1, 2], {a: 'b'}])
-    done()
-  }, done)
-})
-
-test('should promisify with native Promise or Bluebird', function (done) {
-  var promise = relikeAll(fs.readFile, './package.json', 'utf-8')
-
-  promise.then(function (res) {
-    test.ok(res.indexOf('"license": "MIT"') !== -1)
-    if (semver.lt(process.version, '0.11.13')) {
-      test.strictEqual(promise.___bluebirdPromise, true)
-      test.strictEqual(promise.Prome.___bluebirdPromise, true)
-    }
-    done()
-  }, done)
-})
-
-test('should promisify with promise module (pinkie) given in `relikeAll.promise`', function (done) {
-  relikeAll.promise = require('pinkie')
-  var promise = relikeAll(fs.readFile, 'package.json')
-
-  promise.then(function (res) {
-    test.strictEqual(isBuffer(res), true)
-    if (semver.lt(process.version, '0.11.13')) {
-      test.strictEqual(promise.___customPromise, true)
-      test.strictEqual(promise.Prome.___customPromise, true)
-    }
-    done()
-  }, done)
-})
-
-test('should flatten multiple arguments to array by default', function (done) {
-  relikeAll(multipleArgs, 11, 22, 33).then(function (res) {
-    test.strictEqual(isArray(res), true)
-    test.deepEqual(res, [11, 22, 33])
-    done()
-  }, done)
-})
-
-test('should skip last argument only if it is `fn(foo, bar, cb)` (async fn)', function (done) {
-  relikeAll(notSkipOne, 111, 222).then(function (res) {
-    test.strictEqual(isArray(res), true)
-    test.deepEqual(res, [111, 222, noop])
-    done()
-  })
-})
-
-test('should not skip last argument and work core api (fs.readFileSync)', function (done) {
-  relikeAll(notSkipTwo, 333, 5555).then(function (res) {
-    test.strictEqual(isArray(res), true)
-    test.deepEqual(res, [333, 5555, fs.readFileSync])
-    done()
-  })
-})
-
-test('should not skip if pass callback fn, e.g. fn(err, res) as last argument', function (done) {
-  function foo (_err, res) {}
-  relikeAll(function (one, fn, cb) {
-    cb(null, one, fn)
-  }, 123, foo).then(function (res) {
-    test.strictEqual(isArray(res), true)
-    test.deepEqual(res, [123, foo])
-    done()
-  })
-})
-
-test('should promisify sync function `fs.readFileSync` and handle utf8 result', function (done) {
-  var promise = relikeAll(fs.readFileSync, 'package.json', 'utf8')
-
-  promise
-    .then(JSON.parse)
-    .then(function (res) {
-      test.strictEqual(res.name, 'relike-all')
+  // checking `fs.readFileSync`
+  pfs.readFileSync('package.json', 'utf8')
+    .then(JSON.parse, done)
+    .then(function (data) {
+      test.strictEqual(data.name, 'relike-all')
+      return 'package.json'
+    }, done)
+    // checking `fs.readFile`
+    .then(pfs.readFile, done)
+    .then(function (buf) {
+      test.strictEqual(isBuffer(buf), true)
+      return 'package.json'
+    }, done)
+    // checking `fs.createReadStream`
+    .then(pfs.createReadStream, done)
+    .then(function (stream) {
+      test.strictEqual(isStream(stream), true)
       done()
     }, done)
 })
 
-test('should promisify `fs.readFileSync` and handle buffer result', function (done) {
-  relikeAll(fs.readFileSync, 'package.json').then(function (buf) {
-    test.strictEqual(isBuffer(buf), true)
+test('should promisify single function that is given', function (done) {
+  var readFile = relikeAll(fs.readFile)
+
+  readFile('package.json', 'utf8').then(JSON.parse).then(function (data) {
+    test.strictEqual(data.name, 'relike-all')
     done()
   }, done)
 })
 
-test('should catch errors from failing sync function', function (done) {
-  var promise = relikeAll(fs.readFileSync, 'foobar.json', 'utf8')
+test('should promisify only functions that match to given pattern', function (done) {
+  // promisify only `fs.readFile` and `fs.readFileSync`
+  var file = relikeAll(fs, 'readFile*')
+  var stats = file.statSync('package.json')
 
-  promise
-    .catch(function (err) {
-      test.strictEqual(err.code, 'ENOENT')
-      test.strictEqual(/no such file or directory/.test(err.message), true)
-      done()
-    })
+  // so `stats` is object, not a promise
+  test.strictEqual(isPromise(stats), false)
+  test.strictEqual(typeof stats, 'object')
+
+  // when executed promisified always return promise
+  var promise = file.readFileSync('package.json')
+  test.strictEqual(isPromise(promise), true)
+  done()
 })

@@ -7,46 +7,74 @@
 
 'use strict'
 
-var relike = require('relike')
-var sliced = require('sliced')
+var utils = require('./utils')
 
 /**
- * Will try to promisify `fn` with native Promise,
- * otherwise will use `Bluebird` or you can give
- * different promise module to `relikeAll.promise`, for example `pinkie`.
+ * > Promisify all functions in an object.
  *
- * **Example**
+ * **Example:**
  *
  * ```js
- * const fs = require('fs')
- * const request = require('request')
- * const relikeAll = require('relike-all')
+ * var relikeAll = require('relike-all')
+ * var fs = require('fs')
  *
- * relikeAll(fs.readFile, 'package.json', 'utf-8').then(data => {
- *   console.log(JSON.parse(data).name)
+ * fs = relikeAll(fs)
+ * fs.readFile(__filename, 'utf8', function(err, res) {
+ *   //=> err, res
  * })
- *
- * // handles multiple arguments by default (comes from `request`)
- * relikeAll(request, 'http://www.tunnckocore.tk/').then(result => {
- *   const [httpResponse, body] = result
+ * .then(function(res) {
+ *   //=> res
+ *   return fs.stat(__filename)
+ * })
+ * .then(function(stat) {
+ *   assert.strictEqual(stat.size, fs.statSync(__filename).size)
  * })
  * ```
  *
- * @name   relike-all
- * @param  {Anything} `[args...]` any number of any type from string to function (number, array, boolean, etc)
- * @return {Promise} promise
+ * @name relikeAll
+ * @param {Object|Function} `<source>` the source object to promisify from
+ * @param {String|Array|RegExp|Function} `[pattern]` a `micromatch` pattern to filter functions to promisify
+ * @param {Object} `[options]` options passed to `micromatch`
+ * @return {Object|Function}
  * @api public
  */
-module.exports = function relikeAll (val) {
-  relike.promise = relikeAll.promise
-  var args = sliced(arguments)
-  if (typeof val !== 'function') {
-    return relike.call(this, function () {
-      if (require('isarray')(args) && args.length === 1) {
-        return args[0]
-      }
-      return args
-    })
+module.exports = function relikeAll (source, pattern, options) {
+  if (utils.kindOf(source) !== 'function' && utils.kindOf(source) !== 'object') {
+    throw new TypeError('relike-all: expect `source` be object|function')
   }
-  return relike.apply(this, args)
+  var self = this
+  utils.relike.promise = relikeAll.promise || options && options.promise
+
+  if (typeof source === 'function') {
+    return function promisified () {
+      var args = utils.sliced(arguments)
+      utils.relike.promise = promisified.promise || utils.relike.promise
+
+      return utils.relike.apply(self || this, [source].concat(args))
+    }
+  }
+  if (arguments.length === 2 && utils.kindOf(pattern) === 'object') {
+    options = pattern
+    pattern = false
+  }
+  if (!pattern) {
+    pattern = function () {
+      return true
+    }
+  }
+  var isMatch = utils.isMatch(pattern, options)
+
+  return utils.reduce(source, function (dest, fn, name) {
+    if (isMatch(name)) {
+      dest[name] = function promisifiedFn () {
+        var args = utils.sliced(arguments)
+        utils.relike.promise = promisifiedFn.promise || utils.relike.promise
+
+        return utils.relike.apply(self || this, [fn].concat(args))
+      }
+    } else {
+      dest[name] = fn
+    }
+    return dest
+  }, options && options.dest ? options.dest : {})
 }
