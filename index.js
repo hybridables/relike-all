@@ -15,25 +15,24 @@ var utils = require('./utils')
  * **Example:**
  *
  * ```js
- * var relikeAll = require('relike-all')
- * var fs = require('fs')
+ * const relikeAll = require('relike-all')
+ * const fs = relikeAll(require('fs'))
  *
- * fs = relikeAll(fs)
- * fs.readFile(__filename, 'utf8', function(err, res) {
- *   //=> err, res
- * })
- * .then(function(res) {
- *   //=> res
- *   return fs.stat(__filename)
- * })
- * .then(function(stat) {
- *   assert.strictEqual(stat.size, fs.statSync(__filename).size)
- * })
+ * fs.readFile('package.json', 'utf8')
+ *   .then(JSON.parse)
+ *   .then(data => {
+ *     console.log(data.name) // => 'relike-all'
+ *     return data.name
+ *   })
+ *   .then(fs.statSync)
+ *   .then(stats => {
+ *     console.log(stats) // => Stats object
+ *   })
  * ```
  *
  * @name relikeAll
- * @param {Object|Function} `<source>` the source object to promisify from
- * @param {String|Array|RegExp|Function} `[pattern]` a `micromatch` pattern to filter functions to promisify
+ * @param {Object|Function} `<source>` the source object to promisify
+ * @param {String|Array|RegExp|Function} `[pattern]` a `micromatch` pattern to filter
  * @param {Object} `[options]` options passed to `micromatch`
  * @return {Object|Function}
  * @api public

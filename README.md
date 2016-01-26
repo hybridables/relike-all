@@ -18,6 +18,102 @@ npm i relike-all --save
 const relikeAll = require('relike-all')
 ```
 
+### [relikeAll](./index.js#L40)
+> Promisify all functions in an object.
+
+- `<source>` **{Object|Function}** the source object to promisify
+- `[pattern]` **{String|Array|RegExp|Function}** a `micromatch` pattern to filter
+- `[options]` **{Object}** options passed to `micromatch`
+- `return` **{Object|Function}**
+
+**Example**
+
+```js
+const relikeAll = require('relike-all')
+const fs = relikeAll(require('fs'))
+
+fs.readFile('package.json', 'utf8')
+  .then(JSON.parse)
+  .then(data => {
+    console.log(data.name) // => 'relike-all'
+    return data.name
+  })
+  .then(fs.statSync)
+  .then(stats => {
+    console.log(stats) // => Stats object
+  })
+```
+
+
+### relikeAll.promise
+> Static property on which you can pass custom Promise module to use, e.g. `Q` constructor.  
+
+**Example**
+
+```js
+const fs = require('fs')
+const relikeAll = require('relike-all')
+
+// `q` promise will be used if not native promise available
+// but only in node <= 0.11.12
+relikeAll.promise = require('q')
+
+const readFile = relikeAll(fs.readFile)
+readFile('package.json', 'utf-8').then(data => {
+  console.log(JSON.parse(data).name)
+})
+
+// or assign to `.promise` on promisified function
+const statFile = relikeAll(fs.stat)
+
+// `pinkie` promise will be used
+// but only in node <= 0.11.12
+statFile.promise = require('pinkie')
+statFile('package.json').then(stats => {
+  console.log(stats)
+})
+```
+
+### Access Promise constructor
+> You can access the used Promise constructor for promisify-ing from `promise.Prome`
+
+**Example**
+
+```js
+const fs = require('fs')
+const relikeAll = require('relike-all')
+
+// use `pinkie` promise if not native promise available
+// but only in node <= 0.11.12
+relikeAll.promise = require('pinkie')
+
+const readFile = relikeAll(fs.readFile)
+const promise = readFile('package.json', 'utf-8')
+
+console.log(promise.Prome)
+//=> will be `pinkie` promise constructor (only in node <= 0.11.12)
+console.log(promise.Prome.___customPromise) //=> true (only on node <= 0.11.12)
+console.log(promise.___customPromise) //=> true (only on node <= 0.11.12)
+
+promise
+  .then(JSON.parse)
+  .then(data => {
+    console.log(data.name) //=> `relike-value`
+  })
+```
+
+
+## Related
+- [always-done](https://github.com/hybridables/always-done): Handles completion and errors of anything!
+- [always-promise](https://github.com/hybridables/always-promise): Promisify, basically, **everything**. Generator function, callback-style or synchronous function; sync function that returns child process, stream or observable; directly passed promise, stream or child process.
+- [always-thunk](https://github.com/hybridables/always-thunk): Thunkify, basically, **everything**. Generator function, callback-style or synchronous function; sync function that returns child process, stream or observable; directly passed promise, stream or child process.
+- [always-generator](https://github.com/hybridables/always-generator): Generatorify, basically, **everything**. Async, callback-style or synchronous function; sync function that returns child process, stream or observable; directly passed promise, stream or child process.
+- [native-or-another](https://github.com/tunnckoCore/native-or-another): Always will expose native `Promise` if available, otherwise `Bluebird` but only if you don't give another promise module like `q` or `promise` or what you want.
+- [native-promise](https://github.com/tunnckoCore/native-promise): Get native `Promise` or falsey value if not available.
+- [redolent](https://github.com/hybridables/redolent): Simple promisify **everything** (string, array, stream, boolean, sync/async function, etc) with sane defaults.
+- [relike](https://github.com/hybridables/relike): Simple promisify a callback-style function with sane defaults. Support promisify-ing sync functions.
+- [relike-value](https://github.com/hybridables/relike-value): Create promise from sync, async, string, number, array and so on. Handle completion (results) and errors gracefully! Built on top of `relike`, used by `redolent` to build robust (hybrid) APIs.
+
 
 ## Contributing
 Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/hybridables/relike-all/issues/new).  
