@@ -26,7 +26,7 @@ test('should throw TypeError if first argument not an object or function', funct
   done()
 })
 
-test('should promisify all `fs` module functions, including `fs.createReadStream`', function (done) {
+test('should promisify `fs` module, including `fs.createReadStream`', function (done) {
   var pfs = relikeAll(fs)
 
   // checking `fs.readFileSync`
@@ -48,6 +48,22 @@ test('should promisify all `fs` module functions, including `fs.createReadStream
       test.strictEqual(isStream(stream), true)
       done()
     }, done)
+})
+
+test('should promisify `simple-get` module and its methods', function (done) {
+  var simpleGet = relikeAll(require('simple-get'))
+
+  test.strictEqual(typeof simpleGet, 'function')
+  test.strictEqual(typeof simpleGet.get, 'function')
+  test.strictEqual(typeof simpleGet.post, 'function')
+
+  simpleGet('http://ipecho.net/').then(function (stream) {
+    test.strictEqual(isStream(stream), true)
+    simpleGet.get('http://ipecho.net/').then(function (stream) {
+      test.strictEqual(isStream(stream), true)
+      done()
+    }, done)
+  }, done)
 })
 
 test('should promisify single function that is given', function (done) {

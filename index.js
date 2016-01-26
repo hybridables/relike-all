@@ -42,21 +42,22 @@ module.exports = function relikeAll (source, pattern, options) {
     throw new TypeError('relike-all: expect `source` be object|function')
   }
   var Prome = relikeAll.promise || options && options.promise
+  var dest = options && options.dest || {}
+  var self = this
 
   if (typeof source === 'function') {
-    source = utils.relike.promisify.call(this, source, Prome)
+    dest = utils.relike.promisify.call(this, source, Prome)
   }
   if (arguments.length === 2 && utils.kindOf(pattern) === 'object') {
     options = pattern
     pattern = false
   }
-  var self = this
   var isMatch = !pattern ? function () { return true } : utils.isMatch(pattern, options)
 
   return Object.keys(source).length ? utils.reduce(source, function (dest, fn, name) {
     dest[name] = isMatch(name) ? utils.relike.promisify.call(self, fn, Prome) : fn
     return dest
-  }, options && options.dest ? options.dest : {}) : source
+  }, dest) : dest
 }
 
 /**
