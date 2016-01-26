@@ -1,5 +1,9 @@
 
 
+## 2.0.1 - 2016-01-26
+- Release v2.0.1 / npm@v2.0.1
+- don't call `is-match` if not `pattern`
+
 ## 2.0.0 - 2016-01-26
 - Release v2.0.0 / npm@v2.0.0
 - update pkg

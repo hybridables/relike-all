@@ -1,6 +1,6 @@
 {
   "name": "relike-all",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Promisify all functions in an object, using `relike`.",
   "repository": "hybridables/relike-all",
   "author": "Charlike Mike Reagent <@tunnckoCore> (http://www.tunnckocore.tk)",
