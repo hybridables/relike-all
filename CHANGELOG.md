@@ -1,5 +1,10 @@
 
 
+## 2.1.0 - 2016-01-26
+- Release v2.1.0 / npm@v2.1.0
+- add notice to the readme
+- may breaking: make `is-match` devDependency, so if you want to use globs - install it first!
+
 ## 2.0.2 - 2016-01-26
 - Release v2.0.2 / npm@v2.0.2
 - expose `relike.promisify` method
