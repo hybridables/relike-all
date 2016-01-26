@@ -14,7 +14,7 @@
     "kind-of": "^3.0.2",
     "lazy-cache": "^1.0.3",
     "object.reduce": "^0.1.7",
-    "relike": "^1.0.1",
+    "relike": "^1.0.2",
     "sliced": "^1.0.1"
   },
   "devDependencies": {
@@ -28,6 +28,22 @@
     "utils.js"
   ],
   "keywords": [
-    "relike-all"
+    "all",
+    "async",
+    "asynchronous",
+    "callback",
+    "cb",
+    "function",
+    "object",
+    "promise",
+    "promisify",
+    "promisify-all",
+    "relike",
+    "relike-all",
+    "sync",
+    "synchronous",
+    "then",
+    "thenify",
+    "thenify-all"
   ]
 }
