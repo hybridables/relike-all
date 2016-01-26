@@ -56,12 +56,7 @@ module.exports = function relikeAll (source, pattern, options) {
     options = pattern
     pattern = false
   }
-  if (!pattern) {
-    pattern = function () {
-      return true
-    }
-  }
-  var isMatch = utils.isMatch(pattern, options)
+  var isMatch = !pattern ? function () { return true } : utils.isMatch(pattern, options)
 
   return utils.reduce(source, function (dest, fn, name) {
     if (isMatch(name)) {
