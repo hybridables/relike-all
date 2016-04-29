@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "kind-of": "^3.0.2",
-    "lazy-cache": "^1.0.3",
+    "lazy-cache": "^2.0.0",
     "object.reduce": "^0.1.7",
     "relike": "^1.0.3",
     "sliced": "^1.0.1"
