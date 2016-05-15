@@ -10,7 +10,7 @@
 'use strict'
 
 var fs = require('fs')
-var test = require('assertit')
+var test = require('mukla')
 var relikeAll = require('./index')
 var isPromise = require('is-promise')
 var isStream = require('is-node-stream')
@@ -26,28 +26,27 @@ test('should throw TypeError if first argument not an object or function', funct
   done()
 })
 
-test('should promisify `fs` module, including `fs.createReadStream`', function (done) {
+test('should promisify `fs` module, including `fs.createReadStream`', function () {
   var pfs = relikeAll(fs)
 
   // checking `fs.readFileSync`
-  pfs.readFileSync('package.json', 'utf8')
-    .then(JSON.parse, done)
+  return pfs.readFileSync('package.json', 'utf8')
+    .then(JSON.parse)
     .then(function (data) {
       test.strictEqual(data.name, 'relike-all')
       return 'package.json'
-    }, done)
+    })
     // checking `fs.readFile`
-    .then(pfs.readFile, done)
+    .then(pfs.readFile)
     .then(function (buf) {
       test.strictEqual(isBuffer(buf), true)
       return 'package.json'
-    }, done)
+    })
     // checking `fs.createReadStream`
-    .then(pfs.createReadStream, done)
+    .then(pfs.createReadStream)
     .then(function (stream) {
       test.strictEqual(isStream(stream), true)
-      done()
-    }, done)
+    })
 })
 
 test('should promisify `simple-get` module and its methods', function (done) {
@@ -66,20 +65,18 @@ test('should promisify `simple-get` module and its methods', function (done) {
   }, done)
 })
 
-test('should promisify single function that is given', function (done) {
+test('should promisify single function that is given', function () {
   var readFile = relikeAll(fs.readFile)
 
-  readFile('package.json', 'utf8').then(JSON.parse).then(function (data) {
+  return readFile('package.json', 'utf8').then(JSON.parse).then(function (data) {
     test.strictEqual(data.name, 'relike-all')
-    done()
-  }, done)
+  })
 })
 
-test('should use `.promisify` method to promisify function', function (done) {
-  relikeAll.promisify(fs.stat)(__filename).then(function (stats) {
+test('should use `.promisify` method to promisify function', function () {
+  return relikeAll.promisify(fs.stat)(__filename).then(function (stats) {
     test.strictEqual(typeof stats, 'object')
-    done()
-  }, done)
+  })
 })
 
 test('should promisify only functions that match to given pattern', function (done) {
@@ -97,13 +94,12 @@ test('should promisify only functions that match to given pattern', function (do
   done()
 })
 
-test('should accept options as second argument if not third', function (done) {
-  var pfs = relikeAll(fs, {dot: true})
+test('should accept options as second argument if not third', function () {
+  var pfs = relikeAll(fs, { dot: true })
   var stats = pfs.statSync('package.json')
 
   test.strictEqual(isPromise(stats), true)
-  stats.then(function (res) {
+  return stats.then(function (res) {
     test.strictEqual(typeof res, 'object')
-    done()
-  }, done)
+  })
 })
