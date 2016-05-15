@@ -1,5 +1,11 @@
 
 
+## 2.2.0 - 2016-05-15
+- Release v2.2.0 / npm@v2.2.0
+- breaking: `.Prome` to `.Promise` based on `relike@1.1.x` changes, see its changelog and readme
+- update deps: mainly, `relike` which leads to partially breaking changes here 
+- update docs: better docs, use `verb`, related list and etc
+
 ## 2.1.1 - 2016-01-26
 - Release v2.1.1 / npm@v2.1.1
 - support promisify module that is function and have methods on it
