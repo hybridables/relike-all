@@ -13,7 +13,7 @@
     "kind-of": "^3.0.3",
     "lazy-cache": "^2.0.1",
     "object.reduce": "^0.1.7",
-    "relike": "^1.0.3",
+    "relike": "^1.1.2",
     "sliced": "^1.0.1"
   },
   "devDependencies": {
