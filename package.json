@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "kind-of": "^3.0.3",
-    "lazy-cache": "^2.0.1",
+    "lazy-cache": "^2.0.2",
     "object.reduce": "^0.1.7",
     "relike": "^1.1.2",
     "sliced": "^1.0.1"
