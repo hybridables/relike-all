@@ -22,7 +22,7 @@
     "is-match": "^0.4.1",
     "is-node-stream": "^1.0.0",
     "is-promise": "^2.1.0",
-    "mukla": "^0.4.1",
+    "mukla": "^0.4.8",
     "pre-commit": "*",
     "simple-get": "^2.1.0"
   },
